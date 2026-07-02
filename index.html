@@ -128,20 +128,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: #F0F4F8; colo
 .row-detail { font-size: 0.58rem; color: #8899AA; margin-top: 2px; line-height: 1.4; }
 .row-detail .d-int { color: #D4700A; } .row-detail .d-bic { color: #1A5FAD; }
 
-/* DETAIL MODAL */
-.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; display: none; align-items: flex-end; }
-.modal-overlay.open { display: flex; }
-.modal { background: white; border-radius: 20px 20px 0 0; padding: 24px 20px 40px; width: 100%; max-height: 85vh; overflow-y: auto; animation: slideUp 0.3s ease; }
-@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-.modal h2 { font-size: 1rem; font-weight: 800; margin-bottom: 4px; }
-.modal-sub { font-size: 0.72rem; color: #8899AA; margin-bottom: 20px; }
-.modal-row { display: flex; justify-content: space-between; align-items: center; padding: 11px 0; border-bottom: 1px solid #F0F4F8; font-size: 0.82rem; }
-.modal-row:last-child { border-bottom: none; }
-.modal-row .m-label { color: #6B7C8D; font-size: 0.76rem; }
-.modal-row .m-val { font-weight: 700; }
-.modal-row.total { background: #F0FAF4; margin: 0 -20px; padding: 12px 20px; border-radius: 10px; }
-.modal-row.total .m-val { color: #1B8A4E; font-size: 0.95rem; }
-.modal-close { display: block; width: 100%; padding: 14px; background: #F0F4F8; border: none; border-radius: 12px; font-size: 0.9rem; font-weight: 700; font-family: inherit; cursor: pointer; margin-top: 16px; color: #1A2B3C; }
+
 
 /* TOAST */
 .toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(60px); background: #1A2B3C; color: white; padding: 10px 20px; border-radius: 99px; font-size: 0.78rem; font-weight: 600; box-shadow: 0 4px 20px rgba(0,0,0,0.25); transition: transform 0.3s; z-index: 999; white-space: nowrap; pointer-events: none; }
@@ -258,7 +245,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: #F0F4F8; colo
     <div class="card-title">💰 Montants</div>
     <div class="field">
       <label>Capital emprunté (F)</label>
-      <input type="number" id="cfg-capital" value="5000000" oninput="updatePreview()">
+      <input type="number" id="cfg-capital" value="4245000" oninput="updatePreview()">
     </div>
     <div class="field">
       <label>Mensualité fixe (F) <span style="color:#8899AA;font-weight:400;font-size:0.7rem">hors BIC et taxes</span></label>
@@ -271,7 +258,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: #F0F4F8; colo
     <div class="row2">
       <div class="field">
         <label>Taux annuel (%)</label>
-        <input type="number" id="cfg-taux" value="5" step="0.1" oninput="updatePreview()">
+        <input type="number" id="cfg-taux" value="8" step="0.1" oninput="updatePreview()">
       </div>
       <div class="field">
         <label>Taxe intérêts (%)</label>
@@ -335,16 +322,11 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: #F0F4F8; colo
     <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill" style="width:0%"></div></div>
   </div>
 
-  <div class="section-title">Échéancier <span style="font-weight:400;color:#A0AEC0">· Appuie pour voir le détail</span></div>
+  <div class="section-title">Échéancier <span style="font-weight:400;color:#A0AEC0">· Appuie pour cocher</span></div>
   <div class="payments" id="payments-list"></div>
   <div class="spacer"></div>
 </div>
 
-<!-- DETAIL MODAL -->
-<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
-  <div class="modal" id="modal">
-    <h2 id="modal-title">—</h2>
-    <div class="modal-sub" id="modal-sub">—</div>
     <div id="modal-body"></div>
     <button class="modal-close" onclick="closeModal()">Fermer</button>
   </div>
@@ -552,9 +534,9 @@ function useSimResult() {
 function getCfg() {
   return {
     nom:       document.getElementById('cfg-nom').value.trim() || 'Mon Prêt',
-    capital:   parseFloat(document.getElementById('cfg-capital').value)    || 1000000,
-    mensualite:parseFloat(document.getElementById('cfg-mensualite').value) || 200000,
-    taux:      parseFloat(document.getElementById('cfg-taux').value)       || 5,
+    capital:   parseFloat(document.getElementById('cfg-capital').value)    || 4245000,
+    mensualite:parseFloat(document.getElementById('cfg-mensualite').value) || 68730,
+    taux:      parseFloat(document.getElementById('cfg-taux').value)       || 8,
     taxe:      parseFloat(document.getElementById('cfg-taxe').value)       || 15,
     bic:       parseFloat(document.getElementById('cfg-bic').value)        || 300,
     taxeBic:   parseFloat(document.getElementById('cfg-taxe-bic').value)   || 15,
@@ -651,59 +633,9 @@ function renderTracker() {
         <div class="row-detail">Reste: ${fmt(item.capFin)}</div>
       </div>
     `;
-    row.addEventListener('click', () => showDetail(i));
+    row.addEventListener('click', () => togglePaid(i));
     list.appendChild(row);
   });
-}
-
-// ===== DETAIL MODAL =====
-function showDetail(id) {
-  const item = schedule[id];
-  const isPaid = paid.includes(id);
-  document.getElementById('modal-title').textContent = `Échéance ${item.num} — ${item.label}`;
-  document.getElementById('modal-sub').textContent = isPaid ? '✅ Payée' : '⏳ En attente';
-
-  document.getElementById('modal-body').innerHTML = `
-    <div class="modal-row"><span class="m-label">Capital début</span><span class="m-val">${fmt(item.capital)}</span></div>
-    <div class="modal-row"><span class="m-label">Amortissement capital</span><span class="m-val">${fmt(item.amort)}</span></div>
-    <div class="modal-row"><span class="m-label">Intérêts bruts (${cfg.taux}%/an)</span><span class="m-val">${fmt(item.interets)}</span></div>
-    <div class="modal-row"><span class="m-label">Taxe sur intérêts (${cfg.taxe}%)</span><span class="m-val red">${fmt(item.taxInt)}</span></div>
-    <div class="modal-row"><span class="m-label">Sous-total mensualité</span><span class="m-val">${fmt(item.mensualite)}</span></div>
-    <div class="modal-row"><span class="m-label">BIC/Assurance</span><span class="m-val blue">${fmt(item.bic)}</span></div>
-    <div class="modal-row"><span class="m-label">Taxe sur BIC (${cfg.taxeBic}%)</span><span class="m-val red">${fmt(item.taxBic)}</span></div>
-    <div class="modal-row total"><span class="m-label">💳 TOTAL À DÉBITER</span><span class="m-val">${fmt(item.totalMois)}</span></div>
-    <div class="modal-row"><span class="m-label">Capital restant après</span><span class="m-val">${fmt(item.capFin)}</span></div>
-    <div style="height:10px"></div>
-    <button style="display:block;width:100%;padding:14px;background:${isPaid?'#C62828':'#1B8A4E'};color:white;border:none;border-radius:12px;font-size:0.9rem;font-weight:700;font-family:inherit;cursor:pointer;"
-      onclick="toggleFromModal(${id})">
-      ${isPaid ? '❌ Annuler le paiement' : '✅ Marquer comme payée'}
-    </button>
-  `;
-  document.getElementById('modal-overlay').classList.add('open');
-}
-
-function toggleFromModal(id) {
-  togglePaid(id);
-  closeModal();
-}
-
-function closeModal(e) {
-  if (!e || e.target === document.getElementById('modal-overlay')) {
-    document.getElementById('modal-overlay').classList.remove('open');
-  }
-}
-
-function togglePaid(id) {
-  if (paid.includes(id)) {
-    paid = paid.filter(x => x !== id);
-    showToast(`❌ ${schedule[id].label} — annulé`);
-  } else {
-    paid.push(id); paid.sort((a,b)=>a-b);
-    showToast(`✅ ${schedule[id].label} payée !`);
-    if (paid.length === schedule.length) setTimeout(celebrate, 300);
-  }
-  localStorage.setItem(S_PAID, JSON.stringify(paid));
-  renderTracker();
 }
 
 // ===== TOAST =====
