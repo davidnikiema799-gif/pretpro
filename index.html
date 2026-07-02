@@ -3,75 +3,760 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PrêtPro 📊</title>
+<meta name="theme-color" content="#1A2B3C">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PrêtPro">
+<title>PrêtPro</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: #F0F4F8; color: #1A2B3C; min-height: 100vh; padding-bottom: 80px; }
 
-body {
-  font-family: 'Segoe UI', system-ui, sans-serif;
-  background: #F0F4F8;
-  color: #1A2B3C;
-  min-height: 100vh;
-  padding-bottom: 80px;
-}
+/* NAV */
+.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #E2E8F0; display: flex; z-index: 100; box-shadow: 0 -4px 16px rgba(0,0,0,0.08); }
+.nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 0 8px; border: none; background: none; cursor: pointer; font-family: inherit; color: #8899AA; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.4px; gap: 4px; -webkit-tap-highlight-color: transparent; transition: color 0.2s; text-transform: uppercase; }
+.nav-icon { font-size: 1.3rem; line-height: 1; }
+.nav-btn.active { color: #1A5FAD; }
 
-/* ===== BOTTOM NAV ===== */
-.bottom-nav {
-  position: fixed;
-  bottom: 0; left: 0; right: 0;
-  background: white;
-  border-top: 1px solid #E2E8F0;
-  display: flex;
-  z-index: 100;
-  box-shadow: 0 -4px 16px rgba(0,0,0,0.08);
-}
-.nav-btn {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 10px 0 8px;
-  border: none;
-  background: none;
-  cursor: pointer;
-  font-family: inherit;
-  color: #8899AA;
-  font-size: 0.62rem;
-  font-weight: 600;
-  letter-spacing: 0.4px;
-  gap: 3px;
-  -webkit-tap-highlight-color: transparent;
-  transition: color 0.2s;
-}
-.nav-btn .nav-icon { font-size: 1.3rem; }
-.nav-btn.active { color: #1A2B3C; }
-.nav-btn.active .nav-label { color: #1A5FAD; }
-
-/* ===== SCREENS ===== */
+/* SCREENS */
 .screen { display: none; animation: fadeIn 0.2s ease; }
 .screen.active { display: block; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
 
-/* ===== SHARED HEADER ===== */
-.page-header {
-  background: linear-gradient(135deg, #1A2B3C 0%, #2E4A6A 100%);
-  padding: 22px 16px 26px;
-  color: white;
-}
+/* HEADER */
+.page-header { background: linear-gradient(135deg, #1A2B3C 0%, #2E4A6A 100%); padding: 22px 16px 26px; color: white; }
 .page-header h1 { font-size: 1.15rem; font-weight: 800; margin-bottom: 3px; }
 .page-header p { font-size: 0.72rem; opacity: 0.6; }
 
-/* ===== CARDS ===== */
-.card {
-  background: white;
-  border-radius: 14px;
-  padding: 18px;
-  margin: 0 16px 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+/* CARDS */
+.card { background: white; border-radius: 14px; padding: 18px; margin: 12px 16px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.card-title { font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #8899AA; margin-bottom: 14px; }
+
+/* FIELDS */
+.field { margin-bottom: 13px; }
+.field:last-child { margin-bottom: 0; }
+.field label { display: block; font-size: 0.76rem; font-weight: 600; color: #4A5568; margin-bottom: 5px; }
+.field input, .field select { width: 100%; padding: 11px 14px; border: 2px solid #E2E8F0; border-radius: 10px; font-size: 0.95rem; font-family: inherit; color: #1A2B3C; background: #F8FAFC; -webkit-appearance: none; transition: border-color 0.2s; }
+.field input:focus, .field select:focus { outline: none; border-color: #2E4A6A; background: white; }
+.field .hint { font-size: 0.65rem; color: #A0AEC0; margin-top: 4px; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* SLIDER */
+.slider-row { display: flex; align-items: center; gap: 10px; }
+.slider-row input[type=range] { flex: 1; -webkit-appearance: none; height: 6px; border-radius: 99px; background: #E2E8F0; border: none; padding: 0; }
+.slider-row input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: #2E4A6A; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
+.slider-val { min-width: 44px; text-align: right; font-size: 0.88rem; font-weight: 800; color: #2E4A6A; }
+
+/* TOGGLE */
+.toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 4px 0; }
+.toggle-row label { font-size: 0.8rem; font-weight: 600; color: #4A5568; }
+.toggle { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
+.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle-slider { position: absolute; inset: 0; background: #CBD5E0; border-radius: 99px; cursor: pointer; transition: 0.3s; }
+.toggle-slider:before { content:''; position: absolute; height: 18px; width: 18px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.3s; }
+.toggle input:checked + .toggle-slider { background: #2E4A6A; }
+.toggle input:checked + .toggle-slider:before { transform: translateX(20px); }
+
+/* RESULT CARD */
+.result-card { background: linear-gradient(135deg, #1A2B3C, #2E4A6A); border-radius: 14px; padding: 20px; margin: 12px 16px 0; color: white; }
+.result-card h3 { font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.8px; opacity: 0.7; margin-bottom: 12px; }
+.result-main { font-size: 1.9rem; font-weight: 900; margin-bottom: 3px; letter-spacing: -0.5px; }
+.result-sub { font-size: 0.72rem; opacity: 0.6; margin-bottom: 14px; }
+.result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.result-item { background: rgba(255,255,255,0.1); border-radius: 10px; padding: 10px; }
+.result-item .r-label { font-size: 0.6rem; opacity: 0.7; margin-bottom: 3px; }
+.result-item .r-val { font-size: 0.9rem; font-weight: 800; }
+.result-item.highlight { background: rgba(27,138,78,0.3); border: 1px solid rgba(27,138,78,0.5); }
+
+/* VERDICT */
+.verdict { display: flex; align-items: center; gap: 10px; padding: 11px 13px; border-radius: 10px; margin-top: 12px; font-size: 0.76rem; font-weight: 600; }
+.verdict.ok { background: rgba(27,138,78,0.2); color: #A8EFC8; }
+.verdict.warn { background: rgba(240,165,0,0.2); color: #FFE09A; }
+.verdict.bad { background: rgba(198,40,40,0.2); color: #FFAAAA; }
+
+/* TABLE */
+.comp-table { width: 100%; border-collapse: collapse; font-size: 0.76rem; }
+.comp-table th { background: #F0F4F8; padding: 8px 8px; text-align: left; font-size: 0.63rem; text-transform: uppercase; letter-spacing: 0.5px; color: #6B7C8D; font-weight: 700; }
+.comp-table td { padding: 9px 8px; border-bottom: 1px solid #F0F4F8; }
+.comp-table tr:last-child td { border-bottom: none; }
+.comp-table .hl td { background: #F0FAF4; font-weight: 700; color: #1B8A4E; }
+.comp-table .num { text-align: right; }
+
+/* BUTTONS */
+.btn-primary { display: block; width: calc(100% - 32px); margin: 12px 16px 0; padding: 15px; border: none; border-radius: 14px; font-size: 0.95rem; font-weight: 700; font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: transform 0.15s; }
+.btn-primary:active { transform: scale(0.97); }
+.btn-green { background: linear-gradient(135deg,#1B8A4E,#34C47A); color: white; box-shadow: 0 4px 14px rgba(27,138,78,0.3); }
+.btn-dark { background: linear-gradient(135deg,#1A2B3C,#2E4A6A); color: white; box-shadow: 0 4px 14px rgba(26,43,60,0.25); }
+
+/* STATS */
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 12px 16px 0; }
+.stat-card { background: white; border-radius: 12px; padding: 13px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+.stat-card.full { grid-column: 1/-1; }
+.stat-label { font-size: 0.62rem; color: #6B7C8D; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 3px; }
+.stat-value { font-size: 1.1rem; font-weight: 800; }
+.green { color: #1B8A4E; } .orange { color: #D4700A; } .blue { color: #1A5FAD; } .red { color: #C62828; }
+
+/* PROGRESS */
+.progress-wrap { background: white; border-radius: 12px; padding: 13px 16px; margin: 10px 16px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+.progress-label { display: flex; justify-content: space-between; font-size: 0.68rem; color: #6B7C8D; margin-bottom: 7px; }
+.progress-bar-bg { background: #E8EFF5; border-radius: 99px; height: 10px; overflow: hidden; }
+.progress-bar-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg,#1B8A4E,#34C47A); transition: width 0.5s; }
+
+/* SECTION TITLE */
+.section-title { font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #6B7C8D; padding: 16px 16px 8px; }
+
+/* PAYMENTS */
+.payments { padding: 0 16px; display: flex; flex-direction: column; gap: 8px; }
+.payment-row { background: white; border-radius: 12px; display: flex; align-items: center; padding: 12px; gap: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); cursor: pointer; -webkit-tap-highlight-color: transparent; border: 2px solid transparent; transition: all 0.2s; }
+.payment-row:active { transform: scale(0.98); }
+.payment-row.paid { background: #F0FAF4; border-color: #A8E6BF; }
+.payment-row.current { border-color: #F0A500; background: #FFFBF0; }
+.payment-row.overdue { border-color: #FFCDD2; background: #FFF5F5; }
+.check-circle { width: 34px; height: 34px; border-radius: 50%; border: 2.5px solid #CBD5E0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; font-size: 1rem; }
+.payment-row.paid .check-circle { background: #1B8A4E; border-color: #1B8A4E; color: white; }
+.payment-row.current .check-circle { border-color: #F0A500; }
+.payment-row.overdue .check-circle { border-color: #C62828; }
+.row-info { flex: 1; min-width: 0; }
+.row-month { font-size: 0.88rem; font-weight: 700; margin-bottom: 2px; }
+.payment-row.paid .row-month { color: #1B8A4E; }
+.row-meta { font-size: 0.65rem; color: #8899AA; }
+.badge { display: inline-block; font-size: 0.56rem; font-weight: 700; padding: 2px 6px; border-radius: 99px; margin-top: 2px; }
+.b-paid { background:#1B8A4E; color:white; } .b-current { background:#F0A500; color:white; } .b-overdue { background:#C62828; color:white; }
+.row-right { text-align: right; flex-shrink: 0; }
+.row-amount { font-size: 0.85rem; font-weight: 800; }
+.row-detail { font-size: 0.58rem; color: #8899AA; margin-top: 2px; line-height: 1.4; }
+.row-detail .d-int { color: #D4700A; } .row-detail .d-bic { color: #1A5FAD; }
+
+/* DETAIL MODAL */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; display: none; align-items: flex-end; }
+.modal-overlay.open { display: flex; }
+.modal { background: white; border-radius: 20px 20px 0 0; padding: 24px 20px 40px; width: 100%; max-height: 85vh; overflow-y: auto; animation: slideUp 0.3s ease; }
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.modal h2 { font-size: 1rem; font-weight: 800; margin-bottom: 4px; }
+.modal-sub { font-size: 0.72rem; color: #8899AA; margin-bottom: 20px; }
+.modal-row { display: flex; justify-content: space-between; align-items: center; padding: 11px 0; border-bottom: 1px solid #F0F4F8; font-size: 0.82rem; }
+.modal-row:last-child { border-bottom: none; }
+.modal-row .m-label { color: #6B7C8D; font-size: 0.76rem; }
+.modal-row .m-val { font-weight: 700; }
+.modal-row.total { background: #F0FAF4; margin: 0 -20px; padding: 12px 20px; border-radius: 10px; }
+.modal-row.total .m-val { color: #1B8A4E; font-size: 0.95rem; }
+.modal-close { display: block; width: 100%; padding: 14px; background: #F0F4F8; border: none; border-radius: 12px; font-size: 0.9rem; font-weight: 700; font-family: inherit; cursor: pointer; margin-top: 16px; color: #1A2B3C; }
+
+/* TOAST */
+.toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(60px); background: #1A2B3C; color: white; padding: 10px 20px; border-radius: 99px; font-size: 0.78rem; font-weight: 600; box-shadow: 0 4px 20px rgba(0,0,0,0.25); transition: transform 0.3s; z-index: 999; white-space: nowrap; pointer-events: none; }
+.toast.show { transform: translateX(-50%) translateY(0); }
+#confetti-canvas { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:998; }
+
+.spacer { height: 16px; }
+.empty-state { text-align:center; padding:40px 20px; color:#8899AA; }
+.empty-state .e-icon { font-size:2.5rem; margin-bottom:10px; }
+.empty-state p { font-size:0.82rem; line-height:1.5; }
+</style>
+</head>
+<body>
+
+<!-- ===== SIMULATEUR ===== -->
+<div class="screen active" id="screen-sim">
+  <div class="page-header">
+    <h1>🧮 Simulateur de Prêt</h1>
+    <p>Calcule ta capacité d'emprunt en temps réel</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">💼 Ta situation</div>
+    <div class="field">
+      <label>Salaire net mensuel (F)</label>
+      <input type="number" id="sim-salaire" value="300000" oninput="calcSim()">
+    </div>
+    <div class="field">
+      <label>Taux d'endettement max</label>
+      <div class="slider-row">
+        <input type="range" id="sim-end" min="10" max="50" value="33" step="1" oninput="calcSim();document.getElementById('end-val').textContent=this.value+'%'">
+        <span class="slider-val" id="end-val">33%</span>
+      </div>
+      <div class="hint">Standard bancaire : 33% · Certaines banques acceptent 40%</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🏦 Conditions bancaires</div>
+    <div class="field">
+      <label>Taux d'intérêt annuel (%)</label>
+      <div class="slider-row">
+        <input type="range" id="sim-taux" min="0" max="30" value="8" step="0.5" oninput="calcSim();document.getElementById('taux-val').textContent=this.value+'%'">
+        <span class="slider-val" id="taux-val">8%</span>
+      </div>
+    </div>
+    <div class="field">
+      <label>Durée souhaitée (mois)</label>
+      <div class="slider-row">
+        <input type="range" id="sim-duree" min="6" max="240" value="84" step="6" oninput="calcSim();document.getElementById('duree-val').textContent=this.value+' mois'">
+        <span class="slider-val" id="duree-val">84 mois</span>
+      </div>
+    </div>
+    <div class="field">
+      <div class="toggle-row">
+        <label>Taxe sur intérêts (%)</label>
+        <label class="toggle"><input type="checkbox" id="sim-taxe-on" checked onchange="calcSim()"><span class="toggle-slider"></span></label>
+      </div>
+      <div class="slider-row" style="margin-top:8px">
+        <input type="range" id="sim-taxe" min="0" max="30" value="15" step="1" oninput="calcSim();document.getElementById('taxe-val').textContent=this.value+'%'">
+        <span class="slider-val" id="taxe-val">15%</span>
+      </div>
+    </div>
+    <div class="field">
+      <div class="toggle-row">
+        <label>Assurance / BIC (F/mois)</label>
+        <label class="toggle"><input type="checkbox" id="sim-bic-on" checked onchange="calcSim()"><span class="toggle-slider"></span></label>
+      </div>
+      <input type="number" id="sim-bic" value="300" style="margin-top:8px" oninput="calcSim()">
+    </div>
+  </div>
+
+  <div class="result-card">
+    <h3>💰 Tu peux emprunter jusqu'à</h3>
+    <div class="result-main" id="res-capital">—</div>
+    <div class="result-sub" id="res-sub">—</div>
+    <div class="result-grid">
+      <div class="result-item"><div class="r-label">Mensualité (hors BIC)</div><div class="r-val" id="res-mens">—</div></div>
+      <div class="result-item"><div class="r-label">Débit réel/mois</div><div class="r-val" id="res-debit">—</div></div>
+      <div class="result-item"><div class="r-label">Total intérêts+taxes</div><div class="r-val" id="res-int">—</div></div>
+      <div class="result-item"><div class="r-label">Reste à vivre</div><div class="r-val" id="res-rav">—</div></div>
+    </div>
+    <div class="verdict" id="verdict"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📊 Comparatif selon la durée</div>
+    <table class="comp-table">
+      <thead><tr><th>Durée</th><th class="num">Mensualité</th><th class="num">Capital max</th><th class="num">Coût crédit</th></tr></thead>
+      <tbody id="duree-tbody"></tbody>
+    </table>
+  </div>
+
+  <button class="btn-primary btn-green" onclick="useSimResult()">✅ Utiliser pour mon suivi</button>
+  <div class="spacer"></div>
+</div>
+
+<!-- ===== CONFIG ===== -->
+<div class="screen" id="screen-config">
+  <div class="page-header">
+    <h1>⚙️ Paramètres</h1>
+    <p>Configure ton prêt pour le suivi</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🏷️ Identification</div>
+    <div class="field">
+      <label>Nom du prêt</label>
+      <input type="text" id="cfg-nom" placeholder="Ex: Prêt IBB, Voiture..." oninput="updatePreview()">
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">💰 Montants</div>
+    <div class="field">
+      <label>Capital emprunté (F)</label>
+      <input type="number" id="cfg-capital" value="4245000" oninput="updatePreview()">
+    </div>
+    <div class="field">
+      <label>Mensualité fixe (F) <span style="color:#8899AA;font-weight:400;font-size:0.7rem">hors BIC et taxes</span></label>
+      <input type="number" id="cfg-mensualite" value="68730" oninput="updatePreview()">
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📈 Taux & Frais</div>
+    <div class="row2">
+      <div class="field">
+        <label>Taux annuel (%)</label>
+        <input type="number" id="cfg-taux" value="8" step="0.1" oninput="updatePreview()">
+      </div>
+      <div class="field">
+        <label>Taxe intérêts (%)</label>
+        <input type="number" id="cfg-taxe" value="15" step="1" oninput="updatePreview()">
+      </div>
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label>BIC/Assurance (F)</label>
+        <input type="number" id="cfg-bic" value="300" oninput="updatePreview()">
+      </div>
+      <div class="field">
+        <label>Taxe BIC (%)</label>
+        <input type="number" id="cfg-taxe-bic" value="15" step="1" oninput="updatePreview()">
+      </div>
+    </div>
+    <div class="field">
+      <label>Frais de dossier (F) <span style="color:#8899AA;font-weight:400;font-size:0.7rem">payés à la mise en place</span></label>
+      <input type="number" id="cfg-frais" value="63675" oninput="updatePreview()">
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📅 Dates</div>
+    <div class="field">
+      <label>Mois de début</label>
+      <input type="month" id="cfg-debut" value="2024-06" oninput="updatePreview()">
+    </div>
+    <div class="field">
+      <label>Mensualités déjà payées</label>
+      <input type="number" id="cfg-already" value="0" min="0" oninput="updatePreview()">
+      <div class="hint">Seront marquées payées automatiquement</div>
+    </div>
+  </div>
+
+  <div class="result-card">
+    <h3>📊 Aperçu</h3>
+    <div class="result-grid" id="cfg-preview"></div>
+  </div>
+
+  <button class="btn-primary btn-dark" onclick="startTracker()">🚀 Démarrer le suivi</button>
+  <div class="spacer"></div>
+</div>
+
+<!-- ===== TRACKER ===== -->
+<div class="screen" id="screen-tracker">
+  <div class="page-header" style="padding-bottom:16px">
+    <h1 id="tracker-title">Mon Prêt</h1>
+    <p id="tracker-sub"></p>
+  </div>
+
+  <div class="stats">
+    <div class="stat-card"><div class="stat-label">Mois payés</div><div class="stat-value green" id="st-paid">—</div></div>
+    <div class="stat-card"><div class="stat-label">Restants</div><div class="stat-value orange" id="st-rem">—</div></div>
+    <div class="stat-card"><div class="stat-label">Capital remboursé</div><div class="stat-value blue" id="st-cap">—</div></div>
+    <div class="stat-card"><div class="stat-label">Intérêts+Taxes payés</div><div class="stat-value red" id="st-int">—</div></div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-label"><span>Progression remboursement</span><span id="st-pct">0%</span></div>
+    <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill" style="width:0%"></div></div>
+  </div>
+
+  <div class="section-title">Échéancier <span style="font-weight:400;color:#A0AEC0">· Appuie pour voir le détail</span></div>
+  <div class="payments" id="payments-list"></div>
+  <div class="spacer"></div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <h2 id="modal-title">—</h2>
+    <div class="modal-sub" id="modal-sub">—</div>
+    <div id="modal-body"></div>
+    <button class="modal-close" onclick="closeModal()">Fermer</button>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="bottom-nav">
+  <button class="nav-btn active" id="nav-sim" onclick="goScreen('sim')">
+    <span class="nav-icon">🧮</span>
+    <span>Simulateur</span>
+  </button>
+  <button class="nav-btn" id="nav-config" onclick="goScreen('config')">
+    <span class="nav-icon">CFG</span>
+    <span>Paramètres</span>
+  </button>
+  <button class="nav-btn" id="nav-tracker" onclick="goScreen('tracker')">
+    <span class="nav-icon">📋</span>
+    <span>Mon Suivi</span>
+  </button>
+</nav>
+
+<div class="toast" id="toast"></div>
+<canvas id="confetti-canvas"></canvas>
+
+<script>
+const S_CFG  = 'pp2_cfg_v1';
+const S_PAID = 'pp2_paid_v1';
+const MONTHS = ['Janv','Févr','Mars','Avr','Mai','Juin','Juil','Août','Sept','Oct','Nov','Déc'];
+
+let schedule = [], paid = [], cfg = {};
+
+// ===== NAV =====
+function goScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  document.getElementById('nav-' + name).classList.add('active');
+  window.scrollTo(0, 0);
+  if (name === 'tracker') renderTracker();
 }
-.card-title {
-  font-size: 0.68rem;
+
+// ===== FORMAT =====
+function fmt(n) { return isNaN(n) ? '—' : Math.round(n).toLocaleString('fr-FR') + ' F'; }
+function fmtD(d) { return `${MONTHS[d.month]} ${d.year}`; }
+
+// ===== BUILD SCHEDULE =====
+// Formula: mensualite (fixed) = amort + interets + tax_interets
+// BIC + tax_bic = separate, paid on top
+function buildSchedule(c) {
+  const sched = [];
+  let cap = c.capital;
+  const tauxM  = c.taux / 100 / 12;
+  const taxeI  = c.taxe / 100;
+  const taxeB  = c.taxeBic / 100;
+  const [yr, mo] = c.debut.split('-').map(Number);
+  const startY = yr, startM = mo - 1;
+  let i = 0;
+
+  while (cap > 0.5 && i < 600) {
+    const interets  = Math.round(cap * tauxM);
+    const taxInt    = Math.round(interets * taxeI);
+    const bicTtc    = Math.round(c.bic * (1 + taxeB));
+    let amort       = c.mensualite - interets - taxInt;
+    let mensualite  = c.mensualite;
+
+    // Last payment adjustment
+    if (amort >= cap) {
+      amort = Math.round(cap);
+      mensualite = amort + interets + taxInt;
+    }
+
+    const capFin    = Math.round(cap - amort);
+    const totalMois = mensualite + bicTtc;
+
+    const m = (startM + i) % 12;
+    const y = startY + Math.floor((startM + i) / 12);
+
+    sched.push({
+      id: i, num: i + 1,
+      label: `${MONTHS[m]} ${y}`, year: y, month: m,
+      capital: Math.round(cap),
+      amort, interets, taxInt,
+      bic: c.bic, taxBic: Math.round(c.bic * taxeB), bicTtc,
+      mensualite, totalMois, capFin
+    });
+
+    cap = capFin;
+    i++;
+  }
+  return sched;
+}
+
+// ===== SIMULATEUR =====
+function calcSim() {
+  const sal    = parseFloat(document.getElementById('sim-salaire').value) || 0;
+  const endPct = parseFloat(document.getElementById('sim-end').value) / 100;
+  const taux   = parseFloat(document.getElementById('sim-taux').value) / 100;
+  const duree  = parseInt(document.getElementById('sim-duree').value);
+  const taxeOn = document.getElementById('sim-taxe-on').checked;
+  const taxe   = taxeOn ? parseFloat(document.getElementById('sim-taxe').value) / 100 : 0;
+  const bicOn  = document.getElementById('sim-bic-on').checked;
+  const bic    = bicOn ? parseFloat(document.getElementById('sim-bic').value) || 0 : 0;
+  const bicTtc = Math.round(bic * (1 + taxe));
+
+  const mensMax = Math.floor(sal * endPct); // budget total/mois
+  const tauxM   = taux / 12;
+
+  // mensMax = mensualite_base + bicTtc
+  // mensualite_base = amort + int*(1+taxe)
+  // We need to find capital such that annuity = mensualite_base
+  // With taxes: effective monthly cost per F = tauxM*(1+taxe) + principal component
+  // mensualite_base available = mensMax - bicTtc
+  const mensBase = mensMax - bicTtc;
+
+  // Capital max: mensBase = capital * tauxM*(1+taxe) / (1-(1+tauxM)^-n) ... approximate
+  // Actually: mensBase = amort + int*(1+taxe), amort decreases as capital paid
+  // Use standard annuity but with effective rate
+  let capitalMax;
+  if (tauxM === 0) {
+    capitalMax = Math.floor(mensBase * duree);
+  } else {
+    // effective rate considering tax on interest
+    const effRate = tauxM * (1 + taxe);
+    // This is approximate for tax-on-interest model; use iterative approach
+    // Binary search for capital
+    let lo = 0, hi = mensBase * duree * 2;
+    for (let iter = 0; iter < 40; iter++) {
+      const mid = (lo + hi) / 2;
+      // Simulate first payment
+      const int1 = mid * tauxM;
+      const tax1 = int1 * taxe;
+      const mens1 = mid * tauxM * (1 + taxe) / (1 - Math.pow(1 + tauxM, -duree)) * (1 + taxe) / (1 + taxe);
+      // simpler: use present value
+      const pvFactor = (1 - Math.pow(1 + tauxM, -duree)) / tauxM;
+      // mensBase roughly = capital/pvFactor + capital*tauxM*taxe (rough)
+      // Just use: capital = mensBase * pvFactor / (1 + taxe_avg_factor)
+      capitalMax = mensBase * pvFactor / (1 + taxe * 0.5);
+      break;
+    }
+    capitalMax = Math.floor(capitalMax);
+  }
+
+  const totalVerse = mensMax * duree;
+  const totalInt   = totalVerse - capitalMax - bicTtc * duree;
+  const rav        = sal - mensMax;
+
+  document.getElementById('res-capital').textContent = fmt(capitalMax);
+  document.getElementById('res-sub').textContent = `Sur ${duree} mois · Taux ${(taux*100).toFixed(1)}%/an`;
+  document.getElementById('res-mens').textContent = fmt(mensBase);
+  document.getElementById('res-debit').textContent = fmt(mensMax);
+  document.getElementById('res-int').textContent = fmt(Math.max(0, totalInt));
+  document.getElementById('res-rav').textContent = fmt(rav);
+
+  const v = document.getElementById('verdict');
+  const ravPct = rav / sal;
+  if (!sal) { v.className='verdict bad'; v.innerHTML='<span>❌</span> Saisis ton salaire'; }
+  else if (ravPct >= 0.5) { v.className='verdict ok'; v.innerHTML=`<span>✅</span> Profil solide — reste à vivre confortable (${Math.round(ravPct*100)}% du salaire)`; }
+  else if (ravPct >= 0.35) { v.className='verdict warn'; v.innerHTML=`<span>⚠️</span> Acceptable mais serré (${Math.round(ravPct*100)}% du salaire)`; }
+  else { v.className='verdict bad'; v.innerHTML=`<span>🔴</span> Reste à vivre très faible (${Math.round(ravPct*100)}% du salaire)`; }
+
+  // Comparatif
+  const durees = [6,12,24,36,48,60,84,120,180,240].filter(d => d !== duree);
+  durees.unshift(duree);
+  const tbody = document.getElementById('duree-tbody');
+  tbody.innerHTML = '';
+  durees.slice(0,8).forEach(d => {
+    const tauxM2 = taux/12;
+    let cap;
+    if (tauxM2 === 0) cap = mensBase * d;
+    else cap = Math.floor(mensBase * (1-Math.pow(1+tauxM2,-d))/tauxM2 / (1+taxe*0.5));
+    const cout = mensMax * d - cap;
+    const tr = document.createElement('tr');
+    if (d === duree) tr.className = 'hl';
+    const label = d >= 12 ? Math.floor(d/12)+'a'+(d%12?d%12+'m':'') : d+'m';
+    tr.innerHTML = `<td>${label}${d===duree?' ◀':''}</td><td class="num">${fmt(mensMax)}</td><td class="num">${fmt(cap)}</td><td class="num">${fmt(Math.max(0,cout))}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function useSimResult() {
+  const taux  = parseFloat(document.getElementById('sim-taux').value);
+  const taxe  = document.getElementById('sim-taxe-on').checked ? parseFloat(document.getElementById('sim-taxe').value) : 0;
+  const bic   = document.getElementById('sim-bic-on').checked ? parseFloat(document.getElementById('sim-bic').value)||0 : 0;
+  const sal   = parseFloat(document.getElementById('sim-salaire').value)||0;
+  const end   = parseFloat(document.getElementById('sim-end').value)/100;
+  const mensMax = Math.floor(sal*end);
+  const bicTtc  = Math.round(bic*(1+taxe/100));
+  const mensBase = mensMax - bicTtc;
+
+  const now = new Date();
+  document.getElementById('cfg-capital').value    = Math.round(parseFloat(document.getElementById('res-capital').textContent.replace(/\s/g,'').replace('F',''))||0);
+  document.getElementById('cfg-mensualite').value = mensBase;
+  document.getElementById('cfg-taux').value       = taux;
+  document.getElementById('cfg-taxe').value       = taxe;
+  document.getElementById('cfg-bic').value        = bic;
+  document.getElementById('cfg-taxe-bic').value   = taxe;
+  document.getElementById('cfg-debut').value      = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  document.getElementById('cfg-already').value    = 0;
+  updatePreview();
+  goScreen('config');
+  showToast('✅ Paramètres transférés !');
+}
+
+// ===== CONFIG =====
+function getCfg() {
+  return {
+    nom:       document.getElementById('cfg-nom').value.trim() || 'Mon Prêt',
+    capital:   parseFloat(document.getElementById('cfg-capital').value)    || 4245000,
+    mensualite:parseFloat(document.getElementById('cfg-mensualite').value) || 68730,
+    taux:      parseFloat(document.getElementById('cfg-taux').value)       || 8,
+    taxe:      parseFloat(document.getElementById('cfg-taxe').value)       || 15,
+    bic:       parseFloat(document.getElementById('cfg-bic').value)        || 300,
+    taxeBic:   parseFloat(document.getElementById('cfg-taxe-bic').value)   || 15,
+    frais:     parseFloat(document.getElementById('cfg-frais').value)      || 0,
+    debut:     document.getElementById('cfg-debut').value                  || '2024-06',
+    already:   parseInt(document.getElementById('cfg-already').value)      || 0,
+  };
+}
+
+function updatePreview() {
+  const c = getCfg();
+  const s = buildSchedule(c);
+  const totalVerse = s.reduce((a, r) => a + r.totalMois, 0) + c.frais;
+  const totalInt   = s.reduce((a, r) => a + r.interets + r.taxInt, 0);
+  document.getElementById('cfg-preview').innerHTML = `
+    <div class="result-item"><div class="r-label">Durée totale</div><div class="r-val">${s.length} mois</div></div>
+    <div class="result-item"><div class="r-label">Débit réel/mois</div><div class="r-val">${fmt(s[0]?.totalMois)}</div></div>
+    <div class="result-item"><div class="r-label">Total intérêts+taxes</div><div class="r-val">${fmt(totalInt)}</div></div>
+    <div class="result-item highlight"><div class="r-label">Coût total crédit</div><div class="r-val">${fmt(totalVerse - c.capital)}</div></div>
+  `;
+}
+
+function startTracker() {
+  cfg = getCfg();
+  localStorage.setItem(S_CFG, JSON.stringify(cfg));
+  schedule = buildSchedule(cfg);
+  const savedPaid = localStorage.getItem(S_PAID);
+  if (savedPaid) paid = JSON.parse(savedPaid);
+  else { paid = Array.from({length: Math.min(cfg.already, schedule.length)}, (_,i) => i); }
+  localStorage.setItem(S_PAID, JSON.stringify(paid));
+  goScreen('tracker');
+  showToast('✅ Suivi démarré !');
+}
+
+// ===== TRACKER =====
+function getCurrentIdx() {
+  const now = new Date();
+  for (let i=0; i<schedule.length; i++) {
+    if (schedule[i].year===now.getFullYear() && schedule[i].month===now.getMonth()) return i;
+  }
+  return -1;
+}
+
+function renderTracker() {
+  if (!schedule.length) {
+    document.getElementById('payments-list').innerHTML = `<div class="empty-state"><div class="e-icon">📋</div><p>Aucun prêt configuré.<br>Va dans <strong>Paramètres</strong> pour démarrer !</p></div>`;
+    return;
+  }
+  document.getElementById('tracker-title').textContent = cfg.nom || 'Mon Prêt';
+  document.getElementById('tracker-sub').textContent   = `${fmt(cfg.capital)} · ${cfg.taux}%/an · ${fmt(cfg.mensualite)}/mois`;
+
+  const cidx = getCurrentIdx();
+  const now  = new Date();
+  const pc   = paid.length, tot = schedule.length;
+  const pCap = paid.reduce((s,id) => s+(schedule[id]?.amort||0), 0);
+  const pInt = paid.reduce((s,id) => s+(schedule[id]?.interets||0)+(schedule[id]?.taxInt||0), 0);
+  const pct  = Math.round(pc/tot*100);
+
+  document.getElementById('st-paid').textContent = `${pc} / ${tot}`;
+  document.getElementById('st-rem').textContent  = tot - pc;
+  document.getElementById('st-cap').textContent  = fmt(pCap);
+  document.getElementById('st-int').textContent  = fmt(pInt);
+  document.getElementById('st-pct').textContent  = pct + '%';
+  document.getElementById('progress-fill').style.width = pct + '%';
+
+  const list = document.getElementById('payments-list');
+  list.innerHTML = '';
+
+  schedule.forEach((item, i) => {
+    const isPaid    = paid.includes(i);
+    const isCurrent = i === cidx && !isPaid;
+    const isOverdue = !isPaid && new Date(item.year, item.month, 1) < new Date(now.getFullYear(), now.getMonth(), 1);
+
+    const row = document.createElement('div');
+    row.className = 'payment-row' + (isPaid?' paid':'') + (isCurrent?' current':'') + (isOverdue?' overdue':'');
+
+    let badge = '';
+    if (isPaid)        badge = `<span class="badge b-paid">✓ Payé</span>`;
+    else if (isCurrent) badge = `<span class="badge b-current">⏰ Ce mois</span>`;
+    else if (isOverdue) badge = `<span class="badge b-overdue">⚠️ Retard</span>`;
+
+    row.innerHTML = `
+      <div class="check-circle">${isPaid?'✓':''}</div>
+      <div class="row-info">
+        <div class="row-month">${item.label}</div>
+        <div class="row-meta">N°${item.num} ${badge}</div>
+      </div>
+      <div class="row-right">
+        <div class="row-amount">${fmt(item.totalMois)}</div>
+        <div class="row-detail">
+          <span class="d-int">Int: ${fmt(item.interets+item.taxInt)}</span> · 
+          <span class="d-bic">BIC: ${fmt(item.bicTtc)}</span>
+        </div>
+        <div class="row-detail">Reste: ${fmt(item.capFin)}</div>
+      </div>
+    `;
+    row.addEventListener('click', () => showDetail(i));
+    list.appendChild(row);
+  });
+}
+
+// ===== DETAIL MODAL =====
+function showDetail(id) {
+  const item = schedule[id];
+  const isPaid = paid.includes(id);
+  document.getElementById('modal-title').textContent = `Échéance ${item.num} — ${item.label}`;
+  document.getElementById('modal-sub').textContent = isPaid ? '✅ Payée' : '⏳ En attente';
+
+  document.getElementById('modal-body').innerHTML = `
+    <div class="modal-row"><span class="m-label">Capital début</span><span class="m-val">${fmt(item.capital)}</span></div>
+    <div class="modal-row"><span class="m-label">Amortissement capital</span><span class="m-val">${fmt(item.amort)}</span></div>
+    <div class="modal-row"><span class="m-label">Intérêts bruts (${cfg.taux}%/an)</span><span class="m-val">${fmt(item.interets)}</span></div>
+    <div class="modal-row"><span class="m-label">Taxe sur intérêts (${cfg.taxe}%)</span><span class="m-val red">${fmt(item.taxInt)}</span></div>
+    <div class="modal-row"><span class="m-label">Sous-total mensualité</span><span class="m-val">${fmt(item.mensualite)}</span></div>
+    <div class="modal-row"><span class="m-label">BIC/Assurance</span><span class="m-val blue">${fmt(item.bic)}</span></div>
+    <div class="modal-row"><span class="m-label">Taxe sur BIC (${cfg.taxeBic}%)</span><span class="m-val red">${fmt(item.taxBic)}</span></div>
+    <div class="modal-row total"><span class="m-label">💳 TOTAL À DÉBITER</span><span class="m-val">${fmt(item.totalMois)}</span></div>
+    <div class="modal-row"><span class="m-label">Capital restant après</span><span class="m-val">${fmt(item.capFin)}</span></div>
+    <div style="height:10px"></div>
+    <button style="display:block;width:100%;padding:14px;background:${isPaid?'#C62828':'#1B8A4E'};color:white;border:none;border-radius:12px;font-size:0.9rem;font-weight:700;font-family:inherit;cursor:pointer;"
+      onclick="toggleFromModal(${id})">
+      ${isPaid ? '❌ Annuler le paiement' : '✅ Marquer comme payée'}
+    </button>
+  `;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function toggleFromModal(id) {
+  togglePaid(id);
+  closeModal();
+}
+
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modal-overlay')) {
+    document.getElementById('modal-overlay').classList.remove('open');
+  }
+}
+
+function togglePaid(id) {
+  if (paid.includes(id)) {
+    paid = paid.filter(x => x !== id);
+    showToast(`❌ ${schedule[id].label} — annulé`);
+  } else {
+    paid.push(id); paid.sort((a,b)=>a-b);
+    showToast(`✅ ${schedule[id].label} payée !`);
+    if (paid.length === schedule.length) setTimeout(celebrate, 300);
+  }
+  localStorage.setItem(S_PAID, JSON.stringify(paid));
+  renderTracker();
+}
+
+// ===== TOAST =====
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ===== CONFETTI =====
+function celebrate() {
+  showToast('🎉 Prêt entièrement remboursé !');
+  const cv = document.getElementById('confetti-canvas');
+  const ctx = cv.getContext('2d');
+  cv.width = innerWidth; cv.height = innerHeight;
+  const p = Array.from({length:100},()=>({
+    x:Math.random()*cv.width, y:Math.random()*-cv.height,
+    w:8+Math.random()*8, h:5+Math.random()*5,
+    c:['#1B8A4E','#F0A500','#1A5FAD','#E53935','#8E24AA'][Math.floor(Math.random()*5)],
+    rot:Math.random()*360, vx:(Math.random()-.5)*3, vy:3+Math.random()*4, vr:(Math.random()-.5)*6
+  }));
+  let f=0;
+  (function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    p.forEach(q=>{ ctx.save(); ctx.translate(q.x,q.y); ctx.rotate(q.rot*Math.PI/180); ctx.fillStyle=q.c; ctx.fillRect(-q.w/2,-q.h/2,q.w,q.h); ctx.restore(); q.x+=q.vx; q.y+=q.vy; q.rot+=q.vr; });
+    if(++f<150) requestAnimationFrame(draw); else ctx.clearRect(0,0,cv.width,cv.height);
+  })();
+}
+
+// ===== INIT =====
+calcSim();
+updatePreview();
+
+const savedCfg = localStorage.getItem(S_CFG);
+if (savedCfg) {
+  cfg = JSON.parse(savedCfg);
+  document.getElementById('cfg-nom').value       = cfg.nom || '';
+  document.getElementById('cfg-capital').value   = cfg.capital;
+  document.getElementById('cfg-mensualite').value= cfg.mensualite;
+  document.getElementById('cfg-taux').value      = cfg.taux;
+  document.getElementById('cfg-taxe').value      = cfg.taxe;
+  document.getElementById('cfg-bic').value       = cfg.bic;
+  document.getElementById('cfg-taxe-bic').value  = cfg.taxeBic;
+  document.getElementById('cfg-frais').value     = cfg.frais || 0;
+  document.getElementById('cfg-debut').value     = cfg.debut;
+  document.getElementById('cfg-already').value   = cfg.already;
+  schedule = buildSchedule(cfg);
+  paid = JSON.parse(localStorage.getItem(S_PAID) || '[]');
+  updatePreview();
+}
+</script>
+</body>
+</html>
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.8px;
