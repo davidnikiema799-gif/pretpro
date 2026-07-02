@@ -139,11 +139,30 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: #F0F4F8; colo
 .empty-state { text-align:center; padding:40px 20px; color:#8899AA; }
 .empty-state .e-icon { font-size:2.5rem; margin-bottom:10px; }
 .empty-state p { font-size:0.82rem; line-height:1.5; }
+
+/* INSTALL BANNER */
+#install-banner { display:none; position:fixed; top:0; left:0; right:0; background:linear-gradient(135deg,#1B8A4E,#34C47A); color:white; padding:12px 16px; align-items:center; gap:10px; z-index:1000; box-shadow:0 2px 12px rgba(0,0,0,0.2); }
+#install-banner.show { display:flex; }
+.ib-text { flex:1; font-size:0.78rem; font-weight:600; }
+.ib-text span { display:block; font-size:0.65rem; opacity:0.85; font-weight:400; }
+.ib-btn { background:white; color:#1B8A4E; border:none; padding:7px 14px; border-radius:99px; font-size:0.75rem; font-weight:700; cursor:pointer; font-family:inherit; white-space:nowrap; }
+.ib-close { background:rgba(255,255,255,0.2); border:none; color:white; width:26px; height:26px; border-radius:50%; font-size:0.8rem; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
 </style>
 </head>
 <body>
 
 <!-- ===== SIMULATEUR ===== -->
+
+<!-- INSTALL BANNER -->
+<div id="install-banner">
+  <div class="ib-text">
+    📲 Installer PrêtPro
+    <span>Accès rapide depuis ton écran d'accueil</span>
+  </div>
+  <button class="ib-btn" onclick="installApp()">Installer</button>
+  <button class="ib-close" onclick="dismissBanner()">✕</button>
+</div>
+
 <div class="screen active" id="screen-sim">
   <div class="page-header">
     <h1>🧮 Simulateur de Prêt</h1>
@@ -695,6 +714,47 @@ if (savedCfg) {
   paid = JSON.parse(localStorage.getItem(S_PAID) || '[]');
   updatePreview();
 }
+
+// ===== PWA SERVICE WORKER =====
+if ('serviceWorker' in navigator) {
+  const swCode = `
+    const CACHE = 'pretpro-v2';
+    self.addEventListener('install', e => { self.skipWaiting(); });
+    self.addEventListener('activate', e => { e.waitUntil(clients.claim()); });
+    self.addEventListener('fetch', e => {
+      e.respondWith(caches.match(e.request).then(c => c || fetch(e.request).catch(() => c)));
+    });
+  `;
+  const blob = new Blob([swCode], {type:'application/javascript'});
+  navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(()=>{});
+}
+
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  if (!localStorage.getItem('install_dismissed')) {
+    document.getElementById('install-banner').classList.add('show');
+  }
+});
+window.addEventListener('appinstalled', () => {
+  document.getElementById('install-banner').classList.remove('show');
+  showToast('🎉 PrêtPro installé avec succès !');
+});
+function installApp() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(() => {
+      deferredPrompt = null;
+      document.getElementById('install-banner').classList.remove('show');
+    });
+  }
+}
+function dismissBanner() {
+  document.getElementById('install-banner').classList.remove('show');
+  localStorage.setItem('install_dismissed', '1');
+}
+
 </script>
 </body>
 </html>
