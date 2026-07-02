@@ -8,6 +8,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="PrêtPro">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icon.svg">
 <title>PrêtPro</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -717,16 +719,7 @@ if (savedCfg) {
 
 // ===== PWA SERVICE WORKER =====
 if ('serviceWorker' in navigator) {
-  const swCode = `
-    const CACHE = 'pretpro-v2';
-    self.addEventListener('install', e => { self.skipWaiting(); });
-    self.addEventListener('activate', e => { e.waitUntil(clients.claim()); });
-    self.addEventListener('fetch', e => {
-      e.respondWith(caches.match(e.request).then(c => c || fetch(e.request).catch(() => c)));
-    });
-  `;
-  const blob = new Blob([swCode], {type:'application/javascript'});
-  navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(()=>{});
+  navigator.serviceWorker.register('./sw.js').catch(() => {});
 }
 
 let deferredPrompt = null;
