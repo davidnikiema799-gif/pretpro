@@ -245,7 +245,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: #F0F4F8; colo
     <div class="card-title">💰 Montants</div>
     <div class="field">
       <label>Capital emprunté (F)</label>
-      <input type="number" id="cfg-capital" value="5000000" oninput="updatePreview()">
+      <input type="number" id="cfg-capital" value="4245000" oninput="updatePreview()">
     </div>
     <div class="field">
       <label>Mensualité fixe (F) <span style="color:#8899AA;font-weight:400;font-size:0.7rem">hors BIC et taxes</span></label>
@@ -325,11 +325,6 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: #F0F4F8; colo
   <div class="section-title">Échéancier <span style="font-weight:400;color:#A0AEC0">· Appuie pour cocher</span></div>
   <div class="payments" id="payments-list"></div>
   <div class="spacer"></div>
-</div>
-
-    <div id="modal-body"></div>
-    <button class="modal-close" onclick="closeModal()">Fermer</button>
-  </div>
 </div>
 
 <!-- NAV -->
@@ -636,6 +631,20 @@ function renderTracker() {
     row.addEventListener('click', () => togglePaid(i));
     list.appendChild(row);
   });
+}
+
+// ===== TOGGLE PAID =====
+function togglePaid(id) {
+  if (paid.includes(id)) {
+    paid = paid.filter(x => x !== id);
+    showToast(`❌ ${schedule[id].label} — annulé`);
+  } else {
+    paid.push(id); paid.sort((a,b)=>a-b);
+    showToast(`✅ ${schedule[id].label} payée !`);
+    if (paid.length === schedule.length) setTimeout(celebrate, 300);
+  }
+  localStorage.setItem(S_PAID, JSON.stringify(paid));
+  renderTracker();
 }
 
 // ===== TOAST =====
