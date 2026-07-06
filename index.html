@@ -133,8 +133,8 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: #F0F4F8; colo
 
 
 /* TOAST */
-.toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(60px); background: #1A2B3C; color: white; padding: 10px 20px; border-radius: 99px; font-size: 0.78rem; font-weight: 600; box-shadow: 0 4px 20px rgba(0,0,0,0.25); transition: transform 0.3s; z-index: 999; white-space: nowrap; pointer-events: none; }
-.toast.show { transform: translateX(-50%) translateY(0); }
+.toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(16px); opacity: 0; background: #1A2B3C; color: white; padding: 10px 20px; border-radius: 99px; font-size: 0.78rem; font-weight: 600; box-shadow: 0 4px 20px rgba(0,0,0,0.25); transition: transform 0.35s ease, opacity 0.35s ease; z-index: 999; white-space: nowrap; pointer-events: none; }
+.toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 #confetti-canvas { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:998; }
 
 .spacer { height: 16px; }
@@ -149,6 +149,14 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: #F0F4F8; colo
 .ib-text span { display:block; font-size:0.65rem; opacity:0.85; font-weight:400; }
 .ib-btn { background:white; color:#1B8A4E; border:none; padding:7px 14px; border-radius:99px; font-size:0.75rem; font-weight:700; cursor:pointer; font-family:inherit; white-space:nowrap; }
 .ib-close { background:rgba(255,255,255,0.2); border:none; color:white; width:26px; height:26px; border-radius:50%; font-size:0.8rem; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+
+/* MODE TOGGLE */
+.mode-toggle-wrap { display: flex; align-items: center; justify-content: space-between; background: #F0F4F8; border-radius: 12px; padding: 14px 16px; margin: 12px 16px 0; }
+.mode-toggle-wrap .m-label { font-size: 0.85rem; font-weight: 700; color: #1A2B3C; }
+.mode-toggle-wrap .m-sub { font-size: 0.68rem; color: #6B7C8D; margin-top: 2px; }
+.mode-badge { display: inline-block; font-size: 0.65rem; font-weight: 700; padding: 3px 9px; border-radius: 99px; margin-top: 4px; }
+.mode-badge.simple { background: #E8F5E9; color: #2E7D32; }
+.mode-badge.banque { background: #E3F2FD; color: #1565C0; }
 </style>
 </head>
 <body>
@@ -266,15 +274,28 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: #F0F4F8; colo
     <div class="card-title">💰 Montants</div>
     <div class="field">
       <label>Capital emprunté (F)</label>
-      <input type="number" id="cfg-capital" value="5000000" oninput="updatePreview()">
+      <input type="number" id="cfg-capital" value="4245000" oninput="updatePreview()">
     </div>
     <div class="field">
       <label>Mensualité fixe (F) <span style="color:#8899AA;font-weight:400;font-size:0.7rem">hors BIC et taxes</span></label>
-      <input type="number" id="cfg-mensualite" value="100000" oninput="updatePreview()">
+      <input type="number" id="cfg-mensualite" value="68730" oninput="updatePreview()">
     </div>
   </div>
 
-  <div class="card">
+  <!-- MODE TOGGLE -->
+  <div class="mode-toggle-wrap">
+    <div>
+      <div class="m-label">Type de prêt</div>
+      <div class="m-sub">Active les intérêts et frais bancaires</div>
+      <span class="mode-badge simple" id="mode-badge">Prêt simple (0%)</span>
+    </div>
+    <label class="toggle">
+      <input type="checkbox" id="cfg-mode-banque" onchange="toggleModeBanque()">
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+
+  <div class="card" id="card-taux-frais" style="display:none">
     <div class="card-title">📈 Taux & Frais</div>
     <div class="row2">
       <div class="field">
@@ -547,16 +568,27 @@ function useSimResult() {
 }
 
 // ===== CONFIG =====
+
+function toggleModeBanque() {
+  const on = document.getElementById('cfg-mode-banque').checked;
+  document.getElementById('card-taux-frais').style.display = on ? 'block' : 'none';
+  const badge = document.getElementById('mode-badge');
+  badge.textContent = on ? 'Prêt bancaire (avec frais)' : 'Prêt simple (0%)';
+  badge.className = 'mode-badge ' + (on ? 'banque' : 'simple');
+  updatePreview();
+}
+
 function getCfg() {
   return {
     nom:       document.getElementById('cfg-nom').value.trim() || 'Mon Prêt',
-    capital:   parseFloat(document.getElementById('cfg-capital').value)    || 5000000,
-    mensualite:parseFloat(document.getElementById('cfg-mensualite').value) || 100000,
-    taux:      parseFloat(document.getElementById('cfg-taux').value)       || 8,
-    taxe:      parseFloat(document.getElementById('cfg-taxe').value)       || 15,
-    bic:       parseFloat(document.getElementById('cfg-bic').value)        || 300,
-    taxeBic:   parseFloat(document.getElementById('cfg-taxe-bic').value)   || 15,
-    frais:     parseFloat(document.getElementById('cfg-frais').value)      || 0,
+    capital:   parseFloat(document.getElementById('cfg-capital').value)    || 4245000,
+    mensualite:parseFloat(document.getElementById('cfg-mensualite').value) || 68730,
+    modeBanque: document.getElementById('cfg-mode-banque').checked,
+    taux:      document.getElementById('cfg-mode-banque').checked ? (parseFloat(document.getElementById('cfg-taux').value) || 0) : 0,
+    taxe:      document.getElementById('cfg-mode-banque').checked ? (parseFloat(document.getElementById('cfg-taxe').value) || 0) : 0,
+    bic:       document.getElementById('cfg-mode-banque').checked ? (parseFloat(document.getElementById('cfg-bic').value) || 0) : 0,
+    taxeBic:   document.getElementById('cfg-mode-banque').checked ? (parseFloat(document.getElementById('cfg-taxe-bic').value) || 0) : 0,
+    frais:     document.getElementById('cfg-mode-banque').checked ? (parseFloat(document.getElementById('cfg-frais').value) || 0) : 0,
     debut:     document.getElementById('cfg-debut').value                  || '2024-06',
     already:   parseInt(document.getElementById('cfg-already').value)      || 0,
   };
@@ -602,7 +634,7 @@ function renderTracker() {
     return;
   }
   document.getElementById('tracker-title').textContent = cfg.nom || 'Mon Prêt';
-  document.getElementById('tracker-sub').textContent   = `${fmt(cfg.capital)} · ${cfg.taux}%/an · ${fmt(cfg.mensualite)}/mois`;
+  document.getElementById('tracker-sub').textContent   = cfg.modeBanque ? `${fmt(cfg.capital)} · ${cfg.taux}%/an · ${fmt(cfg.mensualite)}/mois` : `${fmt(cfg.capital)} · 0% · ${fmt(cfg.mensualite)}/mois`;
 
   const cidx = getCurrentIdx();
   const now  = new Date();
@@ -705,6 +737,15 @@ if (savedCfg) {
   document.getElementById('cfg-nom').value       = cfg.nom || '';
   document.getElementById('cfg-capital').value   = cfg.capital;
   document.getElementById('cfg-mensualite').value= cfg.mensualite;
+  // Restore mode toggle safely
+  const modeEl = document.getElementById('cfg-mode-banque');
+  if (modeEl && cfg.modeBanque) {
+    modeEl.checked = true;
+    const cardFrais = document.getElementById('card-taux-frais');
+    if (cardFrais) cardFrais.style.display = 'block';
+    const badge = document.getElementById('mode-badge');
+    if (badge) { badge.textContent = 'Prêt bancaire (avec frais)'; badge.className = 'mode-badge banque'; }
+  }
   document.getElementById('cfg-taux').value      = cfg.taux;
   document.getElementById('cfg-taxe').value      = cfg.taxe;
   document.getElementById('cfg-bic').value       = cfg.bic;
