@@ -8,6 +8,7 @@
   "background_color": "#1A2B3C",
   "theme_color": "#1A2B3C",
   "orientation": "portrait",
+  "categories": ["finance", "utilities"],
   "icons": [
     {
       "src": "icon-192.png",
@@ -20,14 +21,6 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "screenshot1.png",
-      "sizes": "540x720",
-      "type": "image/png",
-      "form_factor": "narrow"
     }
   ]
 }
