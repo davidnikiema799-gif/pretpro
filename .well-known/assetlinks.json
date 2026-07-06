@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "io.github.davidnikiema799_gif.twa",
+        "sha256_cert_fingerprints": ["14:33:21:96:D3:3A:78:93:AA:54:57:03:77:98:69:2D:86:4D:55:3D:40:E1:86:11:CD:70:6B:03:DF:16:4D:AC"]
+      }
+    }]
