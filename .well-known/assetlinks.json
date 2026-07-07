@@ -3,6 +3,6 @@
       "target": {
         "namespace": "android_app",
         "package_name": "io.github.davidnikiema799_gif.twa",
-        "sha256_cert_fingerprints": ["14:33:21:96:D3:3A:78:93:AA:54:57:03:77:98:69:2D:86:4D:55:3D:40:E1:86:11:CD:70:6B:03:DF:16:4D:AC"]
+        "sha256_cert_fingerprints": ["C5:CE:3F:9E:30:04:9B:14:32:03:29:9E:EB:32:B7:83:7A:1A:18:41:E3:BF:7C:FE:DA:BD:19:C6:C8:FA:67:F5"]
       }
     }]
